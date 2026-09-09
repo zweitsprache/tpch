@@ -139,7 +139,11 @@ export default async function Home({ searchParams }: HomeProps) {
           </Link>
         )}
       </header>
-      <main className="flex min-h-screen justify-center bg-[#f4f5f7] px-5 py-12 text-[#17212b]">
+      <main
+        className={`flex min-h-screen justify-center bg-[#f4f5f7] px-5 text-[#17212b] ${
+          isMediaPage ? "pt-5" : "py-12"
+        }`}
+      >
       <div className="flex w-full max-w-sm flex-col justify-start">
         {!isMediaPage && <div className="mb-6 flex w-full gap-2">
           {BOOKS.map(({ id, label }) => (
@@ -186,7 +190,7 @@ export default async function Home({ searchParams }: HomeProps) {
         </form>}
 
         {book && pageNumber && (
-          <section className="mt-8 pt-5" aria-live="polite">
+          <section className="pt-0" aria-live="polite">
             <div className="mb-3 rounded-xl bg-white px-4 py-4 text-center text-xl font-extrabold text-[#17212b]">
               {lessonNumber !== null && `Lektion ${lessonNumber} | `}Seite {pageNumber}
             </div>
