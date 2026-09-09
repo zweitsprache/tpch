@@ -152,7 +152,7 @@ export default async function Home({ searchParams }: HomeProps) {
               alt="Treffpunkt"
               width={446}
               height={150}
-              className="h-auto w-full"
+              className="mx-auto h-auto w-[92%]"
               unoptimized
             />
           </div>
