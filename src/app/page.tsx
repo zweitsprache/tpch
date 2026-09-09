@@ -69,22 +69,30 @@ function matchesPage(fileName: string, prefix: string, normalizedPage: string) {
 }
 
 async function getFilesForPageFromBlob(book: Book, prefix: string, normalizedPage: string) {
-  const { blobs } = await list({ prefix: `${book}/` });
+  try {
+    const { blobs } = await list({ prefix: `${book}/` });
 
-  return blobs
-    .map((blob) => blob.pathname.slice(`${book}/`.length))
-    .filter((fileName) => !fileName.endsWith(".poster.jpg") && matchesPage(fileName, prefix, normalizedPage))
-    .sort();
+    return blobs
+      .map((blob) => blob.pathname.slice(`${book}/`.length))
+      .filter((fileName) => !fileName.endsWith(".poster.jpg") && matchesPage(fileName, prefix, normalizedPage))
+      .sort();
+  } catch {
+    return [];
+  }
 }
 
 async function getFilesForPageFromDisk(book: Book, prefix: string, normalizedPage: string) {
-  const resourceDirectory = path.join(process.cwd(), "ressources", book);
-  const files = await readdir(resourceDirectory, { withFileTypes: true });
+  try {
+    const resourceDirectory = path.join(process.cwd(), "ressources", book);
+    const files = await readdir(resourceDirectory, { withFileTypes: true });
 
-  return files
-    .filter((file) => file.isFile() && matchesPage(file.name, prefix, normalizedPage))
-    .map((file) => file.name)
-    .sort();
+    return files
+      .filter((file) => file.isFile() && matchesPage(file.name, prefix, normalizedPage))
+      .map((file) => file.name)
+      .sort();
+  } catch {
+    return [];
+  }
 }
 
 async function getFilesForPage(book: Book, pageNumber: string) {
