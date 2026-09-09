@@ -166,7 +166,15 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
     if (document.fullscreenElement) {
       await document.exitFullscreen();
     } else if (video?.webkitEnterFullscreen) {
-      video.webkitEnterFullscreen();
+      if (video.readyState === 0) {
+        video.load();
+      }
+
+      try {
+        video.webkitEnterFullscreen();
+      } catch {
+        await containerRef.current?.requestFullscreen();
+      }
     } else {
       await containerRef.current?.requestFullscreen();
     }
@@ -178,7 +186,7 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
         ref={videoRef}
         src={src}
         poster={poster}
-        preload="metadata"
+        preload="auto"
         playsInline
         disablePictureInPicture
         className="aspect-video w-full object-contain"
