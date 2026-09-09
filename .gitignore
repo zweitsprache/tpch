@@ -38,4 +38,10 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# large audio/video resources (stored in Vercel Blob instead of git)
+/ressources/*
+!/ressources/fonts/
+!/ressources/logo/
+
 next-env.d.ts

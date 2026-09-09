@@ -6,12 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "upload:resources": "node scripts/upload-to-blob.mjs"
   },
   "dependencies": {
+    "@babel/runtime": "^7.29.7",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@untitled-ui/icons-react": "^0.1.4",
+    "@vercel/blob": "^2.8.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "hls.js": "^1.7.2",
     "next": "16.3.4",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-video-audio-player": "^1.6.5",
+    "tailwind-merge": "^3.6.0",
+    "vidstack": "^0.6.15",
+    "wavesurfer.js": "^7.12.11"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
