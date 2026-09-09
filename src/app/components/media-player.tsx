@@ -123,11 +123,11 @@ function MinimalAudioPlayer({ src }: { src: string }) {
 }
 
 function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useExclusivePlayback(videoRef);
 
@@ -151,37 +151,14 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
     return () => window.clearInterval(interval);
   }, [isPlaying]);
 
-  async function toggleFullscreen() {
-    const video = videoRef.current as (HTMLVideoElement & {
-      webkitEnterFullscreen?: () => void;
-      webkitDisplayingFullscreen?: boolean;
-      webkitExitFullscreen?: () => void;
-    }) | null;
-
-    if (video?.webkitDisplayingFullscreen) {
-      video.webkitExitFullscreen?.();
-      return;
-    }
-
-    if (document.fullscreenElement) {
-      await document.exitFullscreen();
-    } else if (video?.webkitEnterFullscreen) {
-      if (video.readyState === 0) {
-        video.load();
-      }
-
-      try {
-        video.webkitEnterFullscreen();
-      } catch {
-        await containerRef.current?.requestFullscreen();
-      }
-    } else {
-      await containerRef.current?.requestFullscreen();
-    }
-  }
-
   return (
-    <div ref={containerRef} className="overflow-hidden rounded-lg bg-black">
+    <div
+      className={
+        isFullscreen
+          ? "fixed inset-0 z-50 flex flex-col bg-black"
+          : "overflow-hidden rounded-lg bg-black"
+      }
+    >
       <video
         ref={videoRef}
         src={src}
@@ -189,7 +166,7 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
         preload="auto"
         playsInline
         disablePictureInPicture
-        className="aspect-video w-full object-contain"
+        className={isFullscreen ? "min-h-0 flex-1 w-full object-contain" : "aspect-video w-full object-contain"}
         onPlay={() => {
           notifyMediaPlay(videoRef.current);
           setIsPlaying(true);
@@ -238,8 +215,8 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
         </span>
         <button
           type="button"
-          onClick={toggleFullscreen}
-          aria-label="Fullscreen"
+          onClick={() => setIsFullscreen((fullscreen) => !fullscreen)}
+          aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
           className="flex h-8 w-8 shrink-0 items-center justify-center text-[#17212b]"
         >
           <Maximize01 width={18} height={18} />
