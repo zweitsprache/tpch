@@ -29,7 +29,13 @@ function formatTime(seconds: number) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-function useExclusivePlayback(mediaRef: React.RefObject<HTMLMediaElement | null>) {
+function useExclusivePlayback(
+  mediaRef: React.RefObject<HTMLMediaElement | null>,
+  onOtherMediaStopped?: () => void,
+) {
+  const callbackRef = useRef(onOtherMediaStopped);
+  callbackRef.current = onOtherMediaStopped;
+
   useEffect(() => {
     function stopOtherMedia(event: Event) {
       const source = (event as CustomEvent<HTMLMediaElement>).detail;
@@ -38,6 +44,7 @@ function useExclusivePlayback(mediaRef: React.RefObject<HTMLMediaElement | null>
       if (media && source !== media) {
         media.pause();
         media.currentTime = 0;
+        callbackRef.current?.();
       }
     }
 
@@ -128,14 +135,16 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showPoster, setShowPoster] = useState(Boolean(poster));
 
-  useExclusivePlayback(videoRef);
+  useExclusivePlayback(videoRef, () => setShowPoster(Boolean(poster)));
 
   useEffect(() => {
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
-  }, [src]);
+    setShowPoster(Boolean(poster));
+  }, [poster, src]);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -167,17 +176,24 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
           preload="auto"
           playsInline
           disablePictureInPicture
-          className={`h-full w-full object-contain ${!isPlaying && poster ? "opacity-0" : ""}`}
+          className={`h-full w-full object-contain ${showPoster ? "opacity-0" : ""}`}
           onPlay={() => {
             notifyMediaPlay(videoRef.current);
             setIsPlaying(true);
+            setShowPoster(false);
           }}
-          onPause={() => setIsPlaying(false)}
-          onEnded={() => setIsPlaying(false)}
+          onPause={() => {
+            setIsPlaying(false);
+            setShowPoster(Boolean(poster));
+          }}
+          onEnded={() => {
+            setIsPlaying(false);
+            setShowPoster(Boolean(poster));
+          }}
           onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
           onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
         />
-        {!isPlaying && poster && (
+        {showPoster && poster && (
           <button
             type="button"
             onClick={() => videoRef.current?.play()}

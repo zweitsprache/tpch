@@ -145,6 +145,18 @@ export default async function Home({ searchParams }: HomeProps) {
         }`}
       >
       <div className="flex w-full max-w-sm flex-col justify-start">
+        {!isMediaPage && (
+          <div className="mb-6 rounded-xl bg-white p-4">
+            <Image
+              src="/api/logo/title?v=2"
+              alt="Treffpunkt"
+              width={446}
+              height={150}
+              className="h-auto w-full"
+              unoptimized
+            />
+          </div>
+        )}
         {!isMediaPage && <div className="mb-6 flex w-full gap-2">
           {BOOKS.map(({ id, label }) => (
             <Link
