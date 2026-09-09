@@ -156,26 +156,38 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
       className={
         isFullscreen
           ? "fixed inset-0 z-50 flex flex-col bg-black"
-          : "overflow-hidden rounded-lg bg-black"
+          : "relative overflow-hidden rounded-lg bg-black"
       }
     >
-      <video
-        ref={videoRef}
-        src={src}
-        poster={poster}
-        preload="auto"
-        playsInline
-        disablePictureInPicture
-        className={isFullscreen ? "min-h-0 flex-1 w-full object-contain" : "aspect-video w-full object-contain"}
-        onPlay={() => {
-          notifyMediaPlay(videoRef.current);
-          setIsPlaying(true);
-        }}
-        onPause={() => setIsPlaying(false)}
-        onEnded={() => setIsPlaying(false)}
-        onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
-        onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
-      />
+      <div className={isFullscreen ? "relative min-h-0 flex-1" : "relative aspect-video w-full"}>
+        <video
+          ref={videoRef}
+          src={src}
+          poster={poster}
+          preload="auto"
+          playsInline
+          disablePictureInPicture
+          className={`h-full w-full object-contain ${!isPlaying && poster ? "opacity-0" : ""}`}
+          onPlay={() => {
+            notifyMediaPlay(videoRef.current);
+            setIsPlaying(true);
+          }}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+          onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+        />
+        {!isPlaying && poster && (
+          <button
+            type="button"
+            onClick={() => videoRef.current?.play()}
+            aria-label="Play video"
+            className="absolute inset-0 z-10 block h-full w-full bg-black"
+          >
+            <img src={poster} alt="Video preview" className="h-full w-full object-contain" />
+          </button>
+        )}
+      </div>
       <div className="flex items-center gap-3 bg-[#e3e7eb] px-3 py-2 text-[#17212b]">
         <button
           type="button"
