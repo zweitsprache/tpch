@@ -125,7 +125,9 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <>
       <header className="flex h-16 w-full items-center justify-between border-b border-[#e3e7eb] bg-white px-5">
-        <Image src="/api/logo" alt="Logo" width={120} height={40} className="h-8 w-auto" unoptimized />
+        <Link href="/" aria-label="Startseite" title="Startseite">
+          <Image src="/api/logo" alt="Logo" width={120} height={40} className="h-8 w-auto" unoptimized />
+        </Link>
         {isMediaPage && (
           <Link
             href={`/?book=${book}`}

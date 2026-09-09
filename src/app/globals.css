@@ -4,3 +4,45 @@
 body {
 	font-family: "Plus Jakarta Sans Variable", sans-serif;
 }
+
+.media-progress {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.media-progress::-webkit-slider-runnable-track {
+	height: 6px;
+	border-radius: 9999px;
+	background: transparent;
+}
+
+.media-progress::-webkit-slider-thumb {
+	width: 14px;
+	height: 14px;
+	margin-top: -4px;
+	border: 0;
+	border-radius: 50%;
+	background: #f13b3b;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.media-progress::-moz-range-track {
+	height: 6px;
+	border-radius: 9999px;
+	background: transparent;
+}
+
+.media-progress::-moz-range-progress {
+	height: 6px;
+	border-radius: 9999px;
+	background: #f13b3b;
+}
+
+.media-progress::-moz-range-thumb {
+	width: 14px;
+	height: 14px;
+	border: 0;
+	border-radius: 50%;
+	background: #f13b3b;
+}

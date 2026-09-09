@@ -110,7 +110,7 @@ function MinimalAudioPlayer({ src }: { src: string }) {
           setCurrentTime(value);
         }}
         aria-label="Seek"
-        className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full accent-[#f13b3b]"
+        className="media-progress h-1.5 flex-1 cursor-pointer appearance-none rounded-full"
         style={{
             background: `linear-gradient(to right, #f13b3b ${(currentTime / (duration || 1)) * 100}%, #e3e7eb ${(currentTime / (duration || 1)) * 100}%)`,
         }}
@@ -207,7 +207,7 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
             setCurrentTime(value);
           }}
           aria-label="Seek"
-          className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full accent-[#f13b3b]"
+          className="media-progress h-1.5 flex-1 cursor-pointer appearance-none rounded-full"
           style={{
             background: `linear-gradient(to right, #f13b3b ${(currentTime / (duration || 1)) * 100}%, #ffffff ${(currentTime / (duration || 1)) * 100}%)`,
           }}
