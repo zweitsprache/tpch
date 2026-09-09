@@ -152,8 +152,21 @@ function MinimalVideoPlayer({ src, poster }: { src: string; poster?: string }) {
   }, [isPlaying]);
 
   async function toggleFullscreen() {
+    const video = videoRef.current as (HTMLVideoElement & {
+      webkitEnterFullscreen?: () => void;
+      webkitDisplayingFullscreen?: boolean;
+      webkitExitFullscreen?: () => void;
+    }) | null;
+
+    if (video?.webkitDisplayingFullscreen) {
+      video.webkitExitFullscreen?.();
+      return;
+    }
+
     if (document.fullscreenElement) {
       await document.exitFullscreen();
+    } else if (video?.webkitEnterFullscreen) {
+      video.webkitEnterFullscreen();
     } else {
       await containerRef.current?.requestFullscreen();
     }

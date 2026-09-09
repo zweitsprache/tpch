@@ -150,7 +150,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <Link
               key={id}
               href={`/?book=${id}`}
-              className={`flex-1 rounded-xl px-4 py-2 text-center text-sm font-semibold transition-colors ${
+              className={`flex h-11 flex-1 items-center justify-center rounded-xl px-4 text-center text-sm font-semibold transition-colors ${
                 book === id
                   ? "bg-[#f13b3b] text-white"
                   : "bg-white text-[#42515d] hover:bg-[#f5f7f9]"
@@ -161,13 +161,13 @@ export default async function Home({ searchParams }: HomeProps) {
           ))}
         </div>}
 
-        {!isMediaPage && <label
-          htmlFor="number-input"
-          className="mb-3 block text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#667482]"
-        >
-          Seitenzahl
-        </label>}
         {!isMediaPage && <form method="get">
+          <label
+            htmlFor="number-input"
+            className="mb-3 block text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#667482]"
+          >
+            Seitenzahl
+          </label>
           {book && <input type="hidden" name="book" value={book} />}
           <input
             id="number-input"
@@ -178,7 +178,7 @@ export default async function Home({ searchParams }: HomeProps) {
             defaultValue={pageNumber}
             autoFocus
             disabled={!book}
-            className="[appearance:textfield] h-16 w-full rounded-xl border border-[#f13b3b] bg-white px-5 text-center text-3xl font-semibold text-[#17212b] shadow-[0_2px_5px_rgba(23,33,43,0.04)] outline-none transition-colors [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-[#f13b3b] focus:ring-2 focus:ring-[#f13b3b]/15 disabled:cursor-not-allowed disabled:bg-[#f5f7f9] disabled:text-[#a2acb5]"
+              className="[appearance:textfield] h-11 w-full rounded-xl border border-[#f13b3b] bg-white px-5 text-center text-xl font-semibold leading-none text-[#17212b] shadow-[0_2px_5px_rgba(23,33,43,0.04)] outline-none transition-colors [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none focus:border-[#f13b3b] focus:ring-2 focus:ring-[#f13b3b]/15 disabled:cursor-not-allowed disabled:bg-[#f5f7f9] disabled:text-[#a2acb5]"
           />
           <button
             type="submit"
