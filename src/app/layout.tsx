@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Number Grid | Zwelms",
+  title: "TPCH | Demo",
   description: "A structured number grid workspace.",
 };
 
