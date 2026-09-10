@@ -45,8 +45,8 @@ function getExerciseTitle(fileName: string, isAudio: boolean) {
 
     return (
       <>
-        <span className="font-extrabold">{videoNumber}</span> | {isAudio ? " – " : ""}
-        {parsedExerciseNumber}{subLetter}
+        <span className="font-extrabold">{videoNumber}</span> | {letter} – {parsedExerciseNumber}
+        {subLetter}
         {variantLabel ? ` – ${variantLabel}` : ""}
       </>
     );
@@ -63,6 +63,40 @@ function getExerciseTitle(fileName: string, isAudio: boolean) {
   );
 }
 
+// e.g. "TPCH_A1_010_01_03_01_B_02_a" -> { letter: "B", exerciseNumber: 2, subLetter: "a" }
+function getExerciseSortKey(fileName: string) {
+  const segments = fileName.replace(/\.[^.]+$/, "").split("_");
+  const [, , , , , , letter, exerciseNumber, subLetter] = segments;
+  const parsedExerciseNumber = Number.parseInt(exerciseNumber ?? "", 10);
+
+  if (!letter || !subLetter || Number.isNaN(parsedExerciseNumber)) {
+    return null;
+  }
+
+  return { letter, exerciseNumber: parsedExerciseNumber, subLetter };
+}
+
+// Sorts audio/video files together by exercise letter, number and sub-letter (e.g. C_01_a) instead of by file type.
+function compareFileNames(a: string, b: string) {
+  const keyA = getExerciseSortKey(a);
+  const keyB = getExerciseSortKey(b);
+
+  if (keyA && keyB) {
+    if (keyA.letter !== keyB.letter) {
+      return keyA.letter.localeCompare(keyB.letter);
+    }
+    if (keyA.exerciseNumber !== keyB.exerciseNumber) {
+      return keyA.exerciseNumber - keyB.exerciseNumber;
+    }
+    if (keyA.subLetter !== keyB.subLetter) {
+      return keyA.subLetter.localeCompare(keyB.subLetter);
+    }
+    return a.localeCompare(b);
+  }
+
+  return a.localeCompare(b);
+}
+
 function matchesPage(fileName: string, prefix: string, normalizedPage: string) {
   const segments = fileName.split("_");
   return segments[0] === prefix && segments[1] === "A1" && segments[2] === normalizedPage;
@@ -75,7 +109,7 @@ async function getFilesForPageFromBlob(book: Book, prefix: string, normalizedPag
     return blobs
       .map((blob) => blob.pathname.slice(`${book}/`.length))
       .filter((fileName) => !fileName.endsWith(".poster.jpg") && matchesPage(fileName, prefix, normalizedPage))
-      .sort();
+      .sort(compareFileNames);
   } catch {
     return [];
   }
@@ -89,7 +123,7 @@ async function getFilesForPageFromDisk(book: Book, prefix: string, normalizedPag
     return files
       .filter((file) => file.isFile() && matchesPage(file.name, prefix, normalizedPage))
       .map((file) => file.name)
-      .sort();
+      .sort(compareFileNames);
   } catch {
     return [];
   }
